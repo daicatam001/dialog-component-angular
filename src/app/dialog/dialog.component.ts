@@ -11,8 +11,6 @@ import {
   TemplateRef
 } from '@angular/core';
 import { InsertionDirective } from './insertion.directive';
-import { Template } from '@angular/compiler/src/render3/r3_ast';
-import { DialogConfig } from './dialog.config';
 
 @Component({
   selector: 'app-dialog',

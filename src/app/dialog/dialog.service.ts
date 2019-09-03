@@ -12,12 +12,15 @@ import { DialogModule } from './dialog.module';
 import { DialogComponent } from './dialog.component';
 import { DialogInjector } from './dialog.injector';
 import { DialogConfig } from './dialog.config';
+import { Subject } from 'rxjs';
 
 @Injectable({
   providedIn: DialogModule
 })
 export class DialogService {
   dialogComponentRef: ComponentRef<DialogComponent>;
+  afterCloseSubject = new Subject<any>();
+  public afterClose$ = this.afterCloseSubject.asObservable();
   constructor(
     private resolver: ComponentFactoryResolver,
     private appRef: ApplicationRef,
@@ -46,5 +49,6 @@ export class DialogService {
   }
   close() {
     this.removeDialogComponentFromBody();
+    this.afterCloseSubject.next();
   }
 }
