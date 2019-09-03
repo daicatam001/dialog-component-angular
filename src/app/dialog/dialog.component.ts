@@ -26,8 +26,7 @@ export class DialogComponent implements OnInit, AfterViewInit, OnDestroy {
   insertionPoint: InsertionDirective;
   constructor(
     private resolver: ComponentFactoryResolver,
-    private cd: ChangeDetectorRef,
-    public config: DialogConfig
+    private cd: ChangeDetectorRef
   ) {}
 
   ngOnInit() {}
@@ -49,7 +48,7 @@ export class DialogComponent implements OnInit, AfterViewInit, OnDestroy {
       viewContainerRef.createEmbeddedView(contentType);
     } else {
       const factory = this.resolver.resolveComponentFactory(contentType);
-      viewContainerRef.createComponent(factory);
+      this.componentRef = viewContainerRef.createComponent(factory);
     }
   }
   ngOnDestroy(): void {

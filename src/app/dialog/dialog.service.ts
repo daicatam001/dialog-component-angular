@@ -44,4 +44,7 @@ export class DialogService {
     this.appendDialogComponentToBody(config);
     this.dialogComponentRef.instance.childComponentType = componentType;
   }
+  close() {
+    this.removeDialogComponentFromBody();
+  }
 }
