@@ -8,9 +8,15 @@ import {
   ComponentRef,
   ChangeDetectorRef,
   AfterViewInit,
-  TemplateRef
+  TemplateRef,
+  Input,
+  Inject,
+  forwardRef,
+  ApplicationRef
 } from '@angular/core';
 import { InsertionDirective } from './insertion.directive';
+import { Subject } from 'rxjs';
+import { DialogConfig } from './dialog.config';
 
 @Component({
   selector: 'app-dialog',
@@ -18,13 +24,18 @@ import { InsertionDirective } from './insertion.directive';
   styleUrls: ['./dialog.component.scss']
 })
 export class DialogComponent implements OnInit, AfterViewInit, OnDestroy {
-  componentRef: ComponentRef<any>;
+  childComponentRef: ComponentRef<any>;
   childComponentType: Type<any> | TemplateRef<any>;
   @ViewChild(InsertionDirective, { static: true })
   insertionPoint: InsertionDirective;
+
+  afterClosedSubject = new Subject();
+  public afterClosed$ = this.afterClosedSubject.asObservable();
+
   constructor(
     private resolver: ComponentFactoryResolver,
-    private cd: ChangeDetectorRef
+    private cd: ChangeDetectorRef,
+    public dialogConfig: DialogConfig
   ) {}
 
   ngOnInit() {}
@@ -33,7 +44,9 @@ export class DialogComponent implements OnInit, AfterViewInit, OnDestroy {
     this.cd.detectChanges();
   }
   onOverlayClicked(event: MouseEvent) {
-    // close the dialog
+    if (!this.dialogConfig.disabledCloseOnClickOverlay) {
+      this.close();
+    }
   }
 
   onDialogClicked(event: MouseEvent) {
@@ -46,12 +59,16 @@ export class DialogComponent implements OnInit, AfterViewInit, OnDestroy {
       viewContainerRef.createEmbeddedView(contentType);
     } else {
       const factory = this.resolver.resolveComponentFactory(contentType);
-      this.componentRef = viewContainerRef.createComponent(factory);
+      this.childComponentRef = viewContainerRef.createComponent(factory);
     }
   }
+  close() {
+    this.afterClosedSubject.next();
+  }
+
   ngOnDestroy(): void {
-    if (this.componentRef) {
-      this.componentRef.destroy();
+    if (this.childComponentRef) {
+      this.childComponentRef.destroy();
     }
   }
 }

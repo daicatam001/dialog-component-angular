@@ -14,11 +14,9 @@ import { DialogService } from './dialog/dialog.service';
 })
 export class AppComponent implements AfterViewInit {
   @ViewChild(TemplateRef, { static: false }) template: TemplateRef<any>;
-  constructor(public dialog: DialogService) {}
+  constructor(public dialog?: DialogService) {}
   ngAfterViewInit() {
-    this.dialog.open(this.template, {
-      data: { message: 'hello world' }
-    });
+    this.dialog.open(ExampleComponent, { disabledCloseButton: true });
   }
   onClick() {
     console.log(1);

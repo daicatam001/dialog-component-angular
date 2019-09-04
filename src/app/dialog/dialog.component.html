@@ -1,4 +1,5 @@
-<div class="overlay" (click)="onOverlayClicked($event)">
+<div class="overlay" (click)="onOverlayClicked($event)" overlay>
+  <button *ngIf="!dialogConfig.disabledCloseButton" class="close">x</button>
   <div class="dialog" (click)="onDialogClicked($event)">
     <ng-template insertion> </ng-template>
   </div>
